@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shubham - Resume</title>
+    <link rel="stylesheet" href="./styling.css">
+    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js"></script>
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBH16SRIltgfeoXUrhf7Kv1B2EUxdUhef4",
+          authDomain: "my-portfolio-d8e23.firebaseapp.com",
+          projectId: "my-portfolio-d8e23",
+          storageBucket: "my-portfolio-d8e23.appspot.com",
+          messagingSenderId: "376908991589",
+          appId: "1:376908991589:web:55820b6658c0be8efcca8c",
+          measurementId: "G-VJWJXEB9CP"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore(app);
+
+        // Save changes to Firestore
+        async function saveChanges() {
+          const htmlContent = document.documentElement.outerHTML;
+          try {
+                await db.collection("resume").doc("currentVersion").set({
+                html: htmlContent,
+                });
+                alert("Changes saved successfully to Firebase!");
+              } catch (error) {
+              console.error("Error details:", error);
+                alert(`Failed to save changes: ${error.message}`);
+              }
+            }
+
+
+        // Load resume from Firestore
+        async function loadResume() {
+            try {
+                const doc = await db.collection("resume").doc("currentVersion").get();
+                if (doc.exists) {
+                    document.documentElement.innerHTML = doc.data().html;
+                } else {
+                    console.log("No resume found in Firestore.");
+                }
+            } catch (error) {
+                console.error("Error loading resume:", error);
+            }
+        }
+
+        // Add a new project
+        function addProject() {
+            const projectsSection = document.getElementById("projects");
+            const newProject = document.createElement("div");
+            newProject.className = "project";
+            newProject.innerHTML = `
+                <h3>New Project</h3>
+                <ul>
+                    <li>Project detail 1</li>
+                    <li>Project detail 2</li>
+                </ul>
+            `;
+            projectsSection.appendChild(newProject);
+        }
+
+        // Remove the last project
+        function removeProject() {
+            const projectsSection = document.getElementById("projects");
+            const projects = projectsSection.getElementsByClassName("project");
+            if (projects.length > 0) {
+                projectsSection.removeChild(projects[projects.length - 1]);
+            } else {
+                alert("No projects to remove.");
+            }
+        }
+
+        // Authenticate Admin Login
+        function authenticate() {
+            const password = prompt("Enter Admin Password:");
+            const adminPassword = "Shubham15**"; // Set your admin password here
+
+            if (password === adminPassword) {
+                document.querySelectorAll(".editable").forEach(el => el.contentEditable = "true");
+                document.getElementById("save-button").style.display = "block";
+                alert("Admin Mode Enabled! You can now edit the content.");
+            } else {
+                alert("Incorrect Password. Access Denied.");
+            }
+        }
+
+        // Load the resume on page load
+        window.onload = loadResume;
+    </script>
+</head>
+<body>
+    <!-- Admin Controls -->
+    <button onclick="authenticate()">Admin Login</button>
+    <button id="save-button" onclick="saveChanges()" style="display: none;">Save Changes</button>
+    <button onclick="addProject()">Add Project</button>
+    <button onclick="removeProject()">Remove Last Project</button>
+
+    <!-- Header Section -->
+    <header id="header" class="editable">
+        <img src="./InShot_20241227_163552318.jpg" alt="Shubham Sharma" class="profile-image">
+        <h1>Shubham Sharma</h1>
+        <p>Email: <a href="mailto:shubhamsharma15104@gmail.com">shubhamsharma15104@gmail.com</a></p>
+        <p>Phone: +91-816-809-5058</p>
+    </header>
+
+    <!-- Objective Section -->
+    <section id="objective" class="editable">
+        <h2>Objective</h2>
+        <p>Motivated and energetic individual seeking to leverage my knowledge and skills in a results-oriented organization...</p>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="editable">
+        <h2>Projects and Trainings</h2>
+        <div class="project">
+            <h3>Supply Chain Analysis using MySQL</h3>
+            <ul>
+                <li>Conducted comprehensive analysis of supply chain data to uncover valuable insights.</li>
+                <li>Utilized SQL to perform customer analysis, inventory analysis, and supplier relationship evaluation.</li>
+                <li>Identified key trends and patterns to inform strategic decision-making.</li>
+            </ul>
+        </div>
+        <div class="project">
+            <h3>Football Data Analysis using Tableau</h3>
+            <ul>
+                <li>Developed interactive dashboards to visualize and analyze football data.</li>
+                <li>Explored player attributes, team performance, match outcomes, and correlations.</li>
+                <li>Provided actionable insights to support data-driven decision-making, scouting, and tactical strategies.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="editable">
+        <h2>Skills</h2>
+        <h3>Technical Skills:</h3>
+        <ul>
+            <li>Querying Languages: SQL (RDBMS MySQL)</li>
+            <li>Dashboarding: Tableau (data visualization and analysis)</li>
+            <li>Software Proficiency: MS Office (Excel, Word, Teams, PowerPoint), Google Workspace</li>
+        </ul>
+        <h3>Soft Skills:</h3>
+        <ul>
+            <li>Excellent Communication Skills</li>
+            <li>Problem-Solving and Critical Thinking</li>
+            <li>Adaptability and Flexibility</li>
+            <li>Quick Learning</li>
+            <li>Creative Thinking</li>
+            <li>Teamwork and Collaboration</li>
+        </ul>
+    </section>
+
+    <!-- Academic Qualifications Section -->
+    <section id="qualifications" class="editable">
+        <h2>Academic Qualifications</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Year</th>
+                    <th>Course</th>
+                    <th>Institute</th>
+                    <th>Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Exp. March 2025</td>
+                    <td>PGP in Data Science and Engineering</td>
+                    <td>Great Learning, Gurgaon</td>
+                    <td>N/A</td>
+                </tr>
+                <tr>
+                    <td>2024</td>
+                    <td>Bachelor of Science</td>
+                    <td>Arya PG College, Panipat</td>
+                    <td>65.3%</td>
+                </tr>
+                <tr>
+                    <td>2021</td>
+                    <td>Class XII</td>
+                    <td>CBSE</td>
+                    <td>89.8%</td>
+                </tr>
+                <tr>
+                    <td>2019</td>
+                    <td>Class X</td>
+                    <td>CBSE</td>
+                    <td>80.3%</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Links Section -->
+    <section id="links" class="editable">
+        <h2>Links and Profiles</h2>
+        <p>LinkedIn: <a href="https://www.linkedin.com/in/shubham-data-science/" target="_blank">LinkedIn Profile</a></p>
+        <p>GitHub: <a href="https://github.com/Shubham-S151" target="_blank">GitHub Profile</a></p>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer" class="editable">
+        <p>&copy; 2024 Shubham Sharma</p>
+    </footer>
+</body>
+</html>
